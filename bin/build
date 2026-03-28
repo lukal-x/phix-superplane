@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "I am supposed to run a phinx build to actually generate the site."

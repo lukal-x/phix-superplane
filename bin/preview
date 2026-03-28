@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "I am supposed to boot an HTTP server up for like 5 minutes (with at least HTTP BASIC auth or something) to let people preview the changes."
