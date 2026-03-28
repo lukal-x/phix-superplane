@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "I am supposed to inject the page (by filename/basename) to the TOC."

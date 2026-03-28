@@ -136,17 +136,6 @@ spec:
       component:
         name: "approval"
       isCollapsed: false
-    - id: "gitlab-runpipeline-gitlab-runpipeline-40wqdu"
-      name: "gitlab.runPipeline"
-      type: "TYPE_COMPONENT"
-      configuration:
-        ref: "main"
-      position:
-        x: 3456
-        "y": 720
-      component:
-        name: "gitlab.runPipeline"
-      isCollapsed: false
     - id: "annotation-annotation-ozpt20"
       name: "annotation"
       type: "TYPE_WIDGET"
@@ -161,6 +150,24 @@ spec:
       widget:
         name: "annotation"
       isCollapsed: false
+    - id: "component-node-8mi07n"
+      name: "publish"
+      type: "TYPE_COMPONENT"
+      configuration:
+        host: "192.168.1.167"
+        port: 22
+        username: "phix"
+        authentication:
+          authMethod: "password"
+        command: "git stage . && git commit -m 'updated'"
+        timeout: 60
+      metadata: {}
+      position:
+        x: 3456
+        "y": 720
+      component:
+        name: "ssh"
+      isCollapsed: false
   edges:
     - sourceId: "ssh-ssh-z0jvh4"
       targetId: "component-node-1rw85q"
@@ -174,9 +181,9 @@ spec:
     - sourceId: "component-node-1rw85q"
       targetId: "component-node-ch56i6"
       channel: "default"
-    - sourceId: "component-node-ch56i6"
-      targetId: "gitlab-runpipeline-gitlab-runpipeline-40wqdu"
-      channel: "approved"
     - sourceId: "if-if-035naj"
       targetId: "ssh-ssh-z0jvh4"
       channel: "true"
+    - sourceId: "component-node-ch56i6"
+      targetId: "component-node-8mi07n"
+      channel: "approved"
