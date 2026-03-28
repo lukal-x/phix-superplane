@@ -1,0 +1,10 @@
+version: "3"
+services:
+  superplane:
+    image: ghcr.io/superplanehq/superplane-demo:stable
+    network_mode: "host"
+    volumes:
+      - spdata:/app/data
+
+volumes:
+  spdata:

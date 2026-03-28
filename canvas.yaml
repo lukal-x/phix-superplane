@@ -1,0 +1,182 @@
+apiVersion: "v1"
+kind: "Canvas"
+metadata:
+  id: "b6809b83-4440-488a-a533-f49f7059e06e"
+  name: "Phinx"
+  description: ""
+  isTemplate: false
+spec:
+  nodes:
+    - id: "telegram-onmention-telegram-onmention-9f16d4"
+      name: "telegram.onMention"
+      type: "TYPE_TRIGGER"
+      configuration:
+        chatId: "-5268771885"
+        customName: null
+      metadata:
+        appSubscriptionID: "82d72c38-96c2-4aa0-864d-d1567fb08e14"
+        chatId: "-5268771885"
+        chatName: "pythonbelgrade.com"
+      position:
+        x: 480
+        "y": 756
+      component: null
+      blueprint: null
+      trigger:
+        name: "telegram.onMention"
+      widget: null
+      isCollapsed: false
+      integration:
+        id: "5c39dac9-2dc1-43c4-9e40-292599ee9e42"
+        name: ""
+      errorMessage: ""
+      warningMessage: ""
+      paused: false
+    - id: "ssh-ssh-z0jvh4"
+      name: "ssh"
+      type: "TYPE_COMPONENT"
+      configuration:
+        host: "192.168.1.176"
+        port: 22
+        username: "phinx"
+        authentication:
+          authMethod: "password"
+          password:
+            secret: "ssh-thing"
+            key: "pwd"
+        command: "/bin/bash -c {{ root().chat.text }}"
+        timeout: 60
+      metadata: null
+      position:
+        x: 1760
+        "y": 576
+      component:
+        name: "ssh"
+      blueprint: null
+      trigger: null
+      widget: null
+      isCollapsed: false
+      integration: null
+      errorMessage: ""
+      warningMessage: ""
+      paused: false
+    - id: "component-node-1rw85q"
+      name: "Yay we did it!"
+      type: "TYPE_COMPONENT"
+      configuration:
+        chatId: "{{ root().data.chat.id }}"
+        text: "{{previous().result.stdout}}"
+      metadata: null
+      position:
+        x: 2400
+        "y": 756
+      component:
+        name: "telegram.sendMessage"
+      blueprint: null
+      trigger: null
+      widget: null
+      isCollapsed: false
+      integration:
+        id: "5c39dac9-2dc1-43c4-9e40-292599ee9e42"
+        name: ""
+      errorMessage: "error setting up node component-node-1rw85q: chat validation failed: request failed: status 400, body: {\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: chat not found\"}"
+      warningMessage: ""
+      paused: false
+    - id: "if-if-035naj"
+      name: "if"
+      type: "TYPE_COMPONENT"
+      configuration:
+        expression: "any([\"touch\", \"rm\"], first({{$[\"telegram.onMention\"].data.text}}))"
+      metadata: null
+      position:
+        x: 1120
+        "y": 756
+      component:
+        name: "if"
+      blueprint: null
+      trigger: null
+      widget: null
+      isCollapsed: false
+      integration: null
+      errorMessage: ""
+      warningMessage: ""
+      paused: false
+    - id: "component-node-0s7ekc"
+      name: "Cannot let you do that."
+      type: "TYPE_COMPONENT"
+      configuration:
+        chatId: "{{ root().data.chat.id }}"
+        text: "{{first(root().data.text)}} failed: I am sorry {{root().data.from.first_name}} I cannot let you do that."
+      metadata: null
+      position:
+        x: 1760
+        "y": 936
+      component:
+        name: "telegram.sendMessage"
+      blueprint: null
+      trigger: null
+      widget: null
+      isCollapsed: false
+      integration:
+        id: "5c39dac9-2dc1-43c4-9e40-292599ee9e42"
+        name: ""
+      errorMessage: "error setting up node component-node-0s7ekc: chat validation failed: request failed: status 400, body: {\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: chat not found\"}"
+      warningMessage: ""
+      paused: false
+    - id: "component-node-ch56i6"
+      name: "approval"
+      type: "TYPE_COMPONENT"
+      configuration:
+        items:
+          - type: "anyone"
+      metadata: {}
+      position:
+        x: 2928
+        "y": 738
+      component:
+        name: "approval"
+      isCollapsed: false
+    - id: "gitlab-runpipeline-gitlab-runpipeline-40wqdu"
+      name: "gitlab.runPipeline"
+      type: "TYPE_COMPONENT"
+      configuration:
+        ref: "main"
+      position:
+        x: 3456
+        "y": 720
+      component:
+        name: "gitlab.runPipeline"
+      isCollapsed: false
+    - id: "annotation-annotation-ozpt20"
+      name: "annotation"
+      type: "TYPE_WIDGET"
+      configuration:
+        text: ""
+        color: "yellow"
+        width: 336
+        height: 120
+      position:
+        x: 480
+        "y": 960
+      widget:
+        name: "annotation"
+      isCollapsed: false
+  edges:
+    - sourceId: "ssh-ssh-z0jvh4"
+      targetId: "component-node-1rw85q"
+      channel: "success"
+    - sourceId: "telegram-onmention-telegram-onmention-9f16d4"
+      targetId: "if-if-035naj"
+      channel: "default"
+    - sourceId: "if-if-035naj"
+      targetId: "component-node-0s7ekc"
+      channel: "false"
+    - sourceId: "component-node-1rw85q"
+      targetId: "component-node-ch56i6"
+      channel: "default"
+    - sourceId: "component-node-ch56i6"
+      targetId: "gitlab-runpipeline-gitlab-runpipeline-40wqdu"
+      channel: "approved"
+    - sourceId: "if-if-035naj"
+      targetId: "ssh-ssh-z0jvh4"
+      channel: "true"
